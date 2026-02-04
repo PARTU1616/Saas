@@ -4,6 +4,7 @@ from app.models.user import User
 from app.models.role import Role
 from app.extensions import db
 from app.utils.permissions import role_required, tenant_required
+from app.utils.decorators import admin_required 
 from app.utils.tenant import get_current_org_id
 from app.utils.audit import log_action
 from app.extensions import limiter
@@ -14,7 +15,7 @@ users_bp = Blueprint("users", __name__)
 
 @users_bp.route("/", methods=["POST"])
 @tenant_required
-@role_required("ADMIN")
+@admin_required
 def create_user():
     data = request.get_json()
     email = data.get("email")

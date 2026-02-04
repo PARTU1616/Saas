@@ -28,12 +28,10 @@ def ping():
     return jsonify({"message": "Auth blueprint working"})
 
 from app.models.role import Role
-
 @auth_bp.route("/signup", methods=["POST"])
 @limiter.limit("3 per minute")
 def signup():
     data = request.get_json()
-
     email = data.get("email")
     password = data.get("password")
     org_name = data.get("org_name")
@@ -41,27 +39,22 @@ def signup():
     if not all([email, password, org_name]):
         return jsonify({"error": "Missing fields"}), 400
 
-    # prevent duplicate user
     if User.query.filter_by(email=email).first():
         return jsonify({"error": "User already exists"}), 409
 
-    # get or create org
+    # Organization
     org = Organization.query.filter_by(name=org_name).first()
     if not org:
         org = Organization(name=org_name)
         db.session.add(org)
         db.session.commit()
 
-    # count users in org
+    # Role decision
     user_count = User.query.filter_by(org_id=org.id).count()
+    role_name = "ADMIN" if user_count == 0 else "USER"
+    role = Role.query.filter_by(name=role_name).first()
 
-    # decide role BEFORE creating user
-    if user_count == 0:
-        role = Role.query.filter_by(name="ADMIN").first()
-    else:
-        role = Role.query.filter_by(name="USER").first()
-
-    # create user
+    # Create user
     user = User(
         email=email,
         password_hash=generate_password_hash(password),
@@ -88,6 +81,7 @@ def signup():
         "role": role.name,
         "org_id": user.org_id
     }), 201
+
 
 
 @auth_bp.route("/refresh", methods=["POST"])

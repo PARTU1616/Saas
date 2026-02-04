@@ -36,7 +36,11 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('access_token', this.accessToken)
       localStorage.setItem('refresh_token', this.refreshToken)
 
-      this.setUserFromToken()
+      // Store user info from response
+      this.user = {
+        role: res.data.role,
+        org_id: res.data.org_id,
+      }
     },
 
     logout() {

@@ -20,7 +20,7 @@ export default function (/* { ssrContext } */) {
     return '/login'
   }
 
-  if (to.meta.requiresAdmin && !auth.isAdmin) {
+ if (to.meta.requiresAdmin && auth.user?.role !== 'ADMIN') {
     return '/'
   }
 })

@@ -37,6 +37,17 @@
           </q-item-section>
           <q-item-section>Admin</q-item-section>
         </q-item>
+
+        <q-item
+          v-if="auth.user?.role === 'ADMIN'"
+          clickable
+          to="/admin/users"
+        >
+          <q-item-section avatar>
+            <q-icon name="people" />
+          </q-item-section>
+          <q-item-section>Users</q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 

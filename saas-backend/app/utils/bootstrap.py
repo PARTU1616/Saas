@@ -2,8 +2,6 @@ from app.extensions import db
 from app.models.role import Role
 
 def bootstrap_app():
-    # 1. Create tables if they don't exist
-    db.create_all()
 
     # 2. Seed roles safely
     roles = ["ADMIN", "USER"]

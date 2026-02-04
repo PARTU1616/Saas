@@ -34,6 +34,12 @@ export const routes = [
     component: () => import('pages/ResetPassword.vue')
   },
   {
+  path: '/admin/users',
+  component: () => import('pages/admin/UsersPage.vue'),
+  meta: { requiresAuth: true, requiresAdmin: true },
+}
+,
+  {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
   }
