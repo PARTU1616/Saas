@@ -9,7 +9,29 @@
       :columns="columns"
       row-key="id"
       :loading="loading"
-    />
+    >
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props">
+          <q-btn
+            dense
+            size="sm"
+            color="primary"
+            label="Make Admin"
+            v-if="props.row.role === 'USER'"
+            @click="changeRole(props.row.id, 'ADMIN')"
+          />
+
+          <q-btn
+            dense
+            size="sm"
+            color="negative"
+            label="Make User"
+            v-if="props.row.role === 'ADMIN'"
+            @click="changeRole(props.row.id, 'USER')"
+          />
+        </q-td>
+      </template>
+    </q-table>
   </q-page>
 </template>
 
@@ -25,7 +47,20 @@ const columns = [
   { name: 'email', label: 'Email', field: 'email' },
   { name: 'role', label: 'Role', field: 'role' },
   { name: 'is_active', label: 'Active', field: 'is_active' },
+  { name: 'actions', label: 'Actions', field: 'actions' },
 ]
+
+async function changeRole(userId, role) {
+  try {
+    await api.patch(`/admin/users/${userId}/role`, { role })
+
+    // 🔄 Refresh users
+    const res = await api.get('/users/')
+    users.value = res.data.data
+  } catch (err) {
+    alert(err.response?.data?.error || 'Action failed')
+  }
+}
 
 onMounted(async () => {
   loading.value = true

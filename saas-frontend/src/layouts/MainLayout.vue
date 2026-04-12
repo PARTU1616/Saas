@@ -31,6 +31,7 @@
           v-if="auth.isAdmin"
           clickable
           to="/admin"
+          exact
         >
           <q-item-section avatar>
             <q-icon name="admin_panel_settings" />

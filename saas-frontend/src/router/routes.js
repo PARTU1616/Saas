@@ -13,16 +13,12 @@ export const routes = [
     component: () => import('pages/LoginPage.vue')
   },
   {
-    path: '/admin/users',
-    component: () => import('pages/AdminUsersPage.vue'),
-    meta: { requiresAuth: true, requiresRole: 'ADMIN' }
-  },
-  {
     path: '/admin',
     component: () => import('layouts/MainLayout.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
     children: [
-      { path: '', component: () => import('pages/AdminDashboard.vue') }
+      { path: '', component: () => import('pages/AdminDashboard.vue') },
+      { path: 'users', component: () => import('pages/admin/UsersPage.vue') }
     ]
   },
   {
@@ -33,12 +29,7 @@ export const routes = [
     path: '/reset-password',
     component: () => import('pages/ResetPassword.vue')
   },
-  {
-  path: '/admin/users',
-  component: () => import('pages/admin/UsersPage.vue'),
-  meta: { requiresAuth: true, requiresAdmin: true },
-}
-,
+
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),

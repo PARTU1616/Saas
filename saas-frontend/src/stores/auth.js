@@ -18,12 +18,16 @@ export const useAuthStore = defineStore('auth', {
     setUserFromToken() {
       if (!this.accessToken) return
 
-      const decoded = jwtDecode(this.accessToken)
+      try {
+        const decoded = jwtDecode(this.accessToken)
 
-      this.user = {
-        id: decoded.sub,
-        org_id: decoded.org_id,
-        role: decoded.role
+        this.user = {
+          id: decoded.sub,
+          org_id: decoded.org_id,
+          role: decoded.role
+        }
+      } catch {
+        this.logout()
       }
     },
 

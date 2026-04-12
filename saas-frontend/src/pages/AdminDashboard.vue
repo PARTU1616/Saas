@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <q-page class="q-pa-md">
     <h4>Admin Dashboard</h4>
 
     <q-card class="q-mt-md">
@@ -26,7 +26,7 @@
           <template #body-cell-actions="props">
             <q-td :props="props" class="q-gutter-x-sm">
               <q-btn
-                v-if="props.row.id !== auth.user?.id"
+                v-if="props.row.id != auth.user?.id"
                 size="sm"
                 flat
                 color="primary"
@@ -35,7 +35,7 @@
               />
 
               <q-btn
-                v-if="props.row.id !== auth.user?.id"
+                v-if="props.row.id != auth.user?.id"
                 size="sm"
                 flat
                 :color="props.row.is_active ? 'negative' : 'positive'"
@@ -86,7 +86,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </div>
+  </q-page>
 </template>
 
 <script setup>
@@ -176,7 +176,7 @@ const toggleRole = async (user) => {
   const newRole = user.role === 'ADMIN' ? 'USER' : 'ADMIN'
   loading.value = true
   try {
-    await api.put(`/users/${user.id}/role`, { role: newRole })
+    await api.patch(`/admin/users/${user.id}/role`, { role: newRole })
     $q.notify({
       color: 'positive',
       message: `Role updated to ${newRole}`,
