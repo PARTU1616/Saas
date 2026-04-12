@@ -14,7 +14,7 @@ from app.models.role import Role
 from app.utils.security import generate_password_hash, check_password_hash
 from app.extensions import limiter
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 import secrets
 from app.utils.security import hash_token
 
@@ -153,7 +153,7 @@ def forgot_password():
     hashed_token = hash_token(token)
     
     user.reset_token = hashed_token
-    user.reset_token_expires_at = datetime.utcnow() + timedelta(minutes=15)
+    user.reset_token_expires_at = datetime.now(UTC) + timedelta(minutes=15)
 
     db.session.commit()
 
@@ -177,7 +177,7 @@ def reset_password():
 
     user = User.query.filter_by(reset_token=hashed_incoming).first()
 
-    if not user or user.reset_token_expires_at < datetime.utcnow():
+    if not user or user.reset_token_expires_at < datetime.now(UTC):
         return jsonify({"error": "Invalid or expired token"}), 400
 
     user.password_hash = generate_password_hash(new_password)
