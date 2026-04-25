@@ -92,3 +92,31 @@ jobs:
       - name: Verify image runs
         run: |
           docker run --rm saas-backend python -c "import flask; print('Flask OK')"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        env:
+          DEPLOY_KEY: ${{ secrets.EC2_DEPLOY_KEY }}
+          EC2_IP: ${{ secrets.EC2_IP }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/deploy-key
+          chmod 600 ~/.ssh/deploy-key
+          ssh-keyscan -H $EC2_IP >> ~/.ssh/known_hosts
+          
+          ssh -i ~/.ssh/deploy-key ubuntu@$EC2_IP << 'DEPLOY'
+          cd ~/Saas
+          git pull origin main
+          docker compose build backend
+          docker compose up -d
+          docker compose run --rm -e FLASK_APP=run.py backend flask db upgrade
+          echo "Deployment complete"
+          DEPLOY
