@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useAuthStore } from 'stores/auth'
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8080', // backend URL
+  baseURL: 'http://prathameshgalugade.in:8080',
 })
 
 export default boot(({ app }) => {
@@ -14,7 +14,6 @@ export default boot(({ app }) => {
     }
     return config
   })
-
   app.config.globalProperties.$api = api
 })
 
