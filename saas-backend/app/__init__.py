@@ -11,7 +11,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
-    cors.init_app(app, resources={r"/*": {"origins": "*"}})
+    cors.init_app(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://saas-frontend-gold.vercel.app", "https://prathameshgalugade.in"]}})
     limiter.init_app(app)
 
     # SAFE BOOTSTRAP
