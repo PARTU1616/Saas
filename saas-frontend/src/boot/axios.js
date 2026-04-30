@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useAuthStore } from 'stores/auth'
 
 const api = axios.create({
-  baseURL: 'http://prathameshgalugade.in:8080',
+  baseURL: 'http://prathameshgalugade.in',
 })
 
 export default boot(({ app }) => {
